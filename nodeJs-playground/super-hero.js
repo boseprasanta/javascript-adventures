@@ -13,4 +13,4 @@ class SuperHero {
 	}
 }
 
-module.exports = new SuperHero("Spider man")
+module.exports = SuperHero

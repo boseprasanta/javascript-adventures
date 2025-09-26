@@ -11,15 +11,11 @@ require("./batman") // reason iife (allows you to repaeat variable or function n
 // each loaded module in node.js is wrapped with an IIFE that provides private scoping
 var i = 10;
 (function abc() {
-   console.log("hi abc") 
+   console.log("hi abcss") 
 })()
 
-console.log("get super hero name", superHero.getName())
-superHero.setName("Batman")
-console.log("get super hero name batman", superHero.getName())
 
-const superHero2 = require("./super-hero.js")
+const data = require("./data.json") // require will convert this to a json object
+// const data = require("./data") -> this works as well but it will try to look for .js file first
 
-// should be Spiderman - but will be batman
-// cause in node once the module is required it's cached
-console.log("super hero after redeclare", superHero2.getName())
+console.log("data", data)
