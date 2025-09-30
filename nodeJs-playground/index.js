@@ -1,21 +1,39 @@
-// like common js - add js is loaded in index.js
-// by this way we do default export
-const add = require("./add.js"); // can use any name
-const superHero = require("./super-hero.js");
+const path = require("node:path"); // node: says its an internal module
 
-console.log("hello from node.js", add(1, 6))
+console.log(__filename)
+console.log(__dirname)
 
-require("./superman") // one value from one module doeswn't modify other
-require("./batman") // reason iife (allows you to repaeat variable or function names)
+console.log(path.basename(__filename))
+console.log(path.basename(__dirname))
 
-// each loaded module in node.js is wrapped with an IIFE that provides private scoping
-var i = 10;
-(function abc() {
-   console.log("hi abcss") 
-})()
+console.log(path.extname(__filename))
+console.log(path.extname(__dirname))
+
+console.log(path.parse(__filename)) // returns the url to json
+console.log(path.format(path.parse(__filename))) // converts json to url
+
+console.log(path.isAbsolute(__filename))
+console.log(path.isAbsolute("./data.jsom"))
+
+console.log(path.join("folder1", "folder2", "data.json")) // basic concatination
+console.log(path.join("/folder1", "folder2", "data.json"))
+console.log(path.join("/folder1", "//folder2", "data.json"))
+console.log(path.join("/folder1", "//folder2", "../data.json")) // it normalises the result
+/*
+   folder1/folder2/data.json
+   /folder1/folder2/data.json
+   /folder1/folder2/data.json
+   /folder1/data.json
+*/
+
+console.log(path.join(__dirname, "data.json"))
 
 
-const data = require("./data.json") // require will convert this to a json object
-// const data = require("./data") -> this works as well but it will try to look for .js file first
-
-console.log("data", data)
+// if no forward slash - just concat and attach folder path in front
+console.log(path.resolve("folder1", "folder2", "data.json"))
+// if forward slash provided - consider that only
+console.log(path.resolve("/folder1", "folder2", "data.json"))
+// if there are two forward / consider the latest one
+console.log(path.resolve("/folder1", "//folder2", "data.json"))
+// normilises like join - but if the result has / the considers it
+console.log(path.resolve("/folder1", "//folder2", "../data.json")) // it normalises the result
