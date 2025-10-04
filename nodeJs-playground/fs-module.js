@@ -1,9 +1,10 @@
 const fs = require("node:fs");
 
-const fileContents = fs.readFileSync("./file.txt", "utf-8"); // returns buffer
-console.log("fileContents", fileContents)
+// const fileContents = fs.readFileSync("./file.txt", "utf-8"); // returns buffer
+console.log("fileContents")
 
 fs.readFile("./file.txt", "utf-8", (error, data) => { // non blocking
+	debugger;
 	if (error) {
 		console.log("error", error)
 	} else {
@@ -11,7 +12,7 @@ fs.readFile("./file.txt", "utf-8", (error, data) => { // non blocking
 	}
 })
 
-// fs.writeFileSync("./greet.txt", "Hello World!");
+fs.writeFileSync("./greet.txt", "Hello World!");
 
 fs.writeFile(
 	"./greet.txt", // file path
