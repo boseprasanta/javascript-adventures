@@ -15,7 +15,11 @@ const server = http.createServer((req, res) => {
 	// res.writeHead(200, { "Content-Type": "text/html" })
 	// res.end(html)
 
-	fs.createReadStream(__dirname + "/index.html").pipe(res) // res is a writable stream
+	let html = fs.readFileSync(__dirname + "/index.html", "utf-8")
+	html = html.replace("{{name}}", superHero.firstName + " " + superHero.lastName)
+
+	res.writeHead(200, { "Content-Type": "text/html" })
+	res.end(html)
 })
 
 server.listen(3000, () => {
