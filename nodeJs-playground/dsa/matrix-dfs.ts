@@ -59,3 +59,11 @@ console.log(
 		]
 	)
 )
+
+// dfs ->
+// is stack based and does revisit same node in matrix
+// - works well with backtracking / combination kind of problem
+
+// dfs ->
+// is queue based and doesn't revisit same node in matrix
+// works well with shortest path - cause bfs gives shortest only
