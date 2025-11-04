@@ -1,0 +1,140 @@
+| Stage                  | Meaning                              | What to look for                |
+| ---------------------- | ------------------------------------ | ------------------------------- |
+| **COLLSCAN**           | Full collection scan                 | No index used — bad             |
+| **IXSCAN + FETCH**     | Index used, but doc fetch needed     | Good but not perfect            |
+| **PROJECTION_COVERED** | Fully index-covered                  | Best (no fetch, no sort)        |
+| **PROJECTION_SIMPLE**  | Used index partly or sorted manually | Usually okay, not fully covered |
+
+
+Perfect 👌 — here’s your **MongoDB Profiling & Performance Debugging — 10-Minute Wrap-Up Sheet**.
+It’s designed to be Notion-friendly — you can copy-paste it directly.
+
+---
+
+# ⚡ MongoDB Profiling & Performance Debugging — Quick Sheet
+
+### 🎯 **Purpose**
+
+Use Mongo’s **profiler** + `explain()` to understand *why* queries are slow and *what* indexes help.
+
+---
+
+## 🧩 1. Profiler Basics
+
+| Command                                                       | What It Does                              |
+| ------------------------------------------------------------- | ----------------------------------------- |
+| `db.getProfilingStatus()`                                     | Shows current profiler level & slowms     |
+| `db.setProfilingLevel(0)`                                     | Disable profiling                         |
+| `db.setProfilingLevel(1, { slowms: 20 })`                     | Profile only queries slower than 20 ms    |
+| `db.setProfilingLevel(2)`                                     | Profile **all** queries (use in dev only) |
+| `db.system.profile.find().sort({ ts: -1 }).limit(5).pretty()` | View most recent slow queries             |
+
+🧠 *Profiler is per-database!*
+Run `use yourDB` before changing levels.
+
+---
+
+## 🔍 2. Key Fields in Profiler Output
+
+| Field                            | Meaning                                        | Tip                                      |
+| -------------------------------- | ---------------------------------------------- | ---------------------------------------- |
+| `planSummary`                    | Plan type: `COLLSCAN`, `IXSCAN`, `FETCH`, etc. | **COLLSCAN** → no index used             |
+| `millis`                         | Execution time in ms                           | >20 ms = slow on small data              |
+| `keysExamined` / `docsExamined`  | How much work the query did                    | `docsExamined ≫ nReturned` → inefficient |
+| `nreturned`                      | How many docs matched                          | Compare to result set size               |
+| `hasSortStage` / `stage: "SORT"` | Mongo did an in-memory sort                    | Add/adjust index to match `.sort()`      |
+| `usedDisk` / `spills`            | Sort overflowed to disk                        | Increase RAM or create compound index    |
+
+---
+
+## ⚙️ 3. Common Patterns & Fixes
+
+| Symptom (Profiler / Explain)        | Likely Cause         | Typical Fix                                   |
+| ----------------------------------- | -------------------- | --------------------------------------------- |
+| `planSummary: "COLLSCAN"`           | No matching index    | Add index on filter fields                    |
+| `stage: "SORT"`                     | In-memory sort       | Compound index matching sort                  |
+| `docsExamined ≫ nReturned`          | Low selectivity      | Add more selective index or partial index     |
+| `FETCH` after `IXSCAN`              | Non-covered query    | Include projected fields in index             |
+| `usedDisk: true`                    | Sort spilled to disk | Index or reduce result set size               |
+| `millis` high, `keysExamined` small | Network/IO delay     | Check server load, cache, or indexes on joins |
+
+---
+
+## 🧠 4. `explain("executionStats")` Cheat Keys
+
+| Key                                | What You Learn                              |
+| ---------------------------------- | ------------------------------------------- |
+| `totalDocsExamined` vs `nReturned` | Efficiency of scan                          |
+| `winningPlan.stage`                | `COLLSCAN`, `IXSCAN`, `FETCH`, `SORT`, etc. |
+| `inputStage`                       | What’s nested inside each stage             |
+| `executionTimeMillis`              | Total runtime                               |
+| `indexName`                        | Which index was used                        |
+| `indexBounds`                      | What index ranges were scanned              |
+
+---
+
+## 💡 5. Index Tuning Patterns
+
+| Query                                       | Ideal Index                                  |
+| ------------------------------------------- | -------------------------------------------- |
+| `find({ a: X })`                            | `{ a: 1 }`                                   |
+| `find({ a: X }).sort({ b: 1 })`             | `{ a: 1, b: 1 }`                             |
+| `find({ a: { $gt: X } }).sort({ b: 1 })`    | Often `{ a: 1, b: 1 }`, test with explain    |
+| `find({ status: 'active', type: 'admin' })` | Compound `{ status: 1, type: 1 }`            |
+| Projection-only queries                     | Include projected fields → **covered query** |
+
+🧠 *Rule of thumb*: Equality → Sort → Range.
+Indexes are most efficient when equality filters come first.
+
+---
+
+## 🧰 6. Quick Commands Recap
+
+```js
+// Enable profiler for slow ops
+db.setProfilingLevel(1, { slowms: 20 })
+
+// View slow queries
+db.system.profile.find().sort({ ts: -1 }).limit(5).pretty()
+
+// Inspect execution plan
+db.collection.find({ ... }).explain("executionStats")
+
+// Create index
+db.collection.createIndex({ field1: 1, field2: 1 })
+
+// Drop index
+db.collection.dropIndex("field1_1_field2_1")
+```
+
+---
+
+## 🚦 7. When to Stop Tuning
+
+✅ `IXSCAN` or `PROJECTION_COVERED`
+✅ `docsExamined ≈ nReturned`
+✅ `millis` < 20 ms
+✅ No `SORT` or `usedDisk`
+
+If all true → query is efficient.
+
+---
+
+## 🧭 8. Beyond Basics (optional)
+
+* **Partial indexes:** smaller, faster for common filters
+* **TTL indexes:** auto-expire docs, reduce collection size
+* **Query Profiler in Atlas:** visual slow query analyzer
+* **`db.getLog('profile')`:** view profiler logs without querying `system.profile`
+
+---
+
+### 🧩 TL;DR Mental Model
+
+1️⃣ Run query → 2️⃣ Check profiler → 3️⃣ Explain plan → 4️⃣ Tune index → 5️⃣ Verify improvements.
+
+---
+
+Would you like me to make a **follow-up 10-minute sheet** for the next module —
+👉 **Schema Design Patterns for Performance (Embedding vs Referencing, Bucket, Outlier, Subset)**
+so you can flow right into it before aggregation?

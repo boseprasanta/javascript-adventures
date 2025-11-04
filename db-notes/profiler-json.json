@@ -1,0 +1,129 @@
+{
+  "op": "query",
+  "ns": "mongo_practice.orders",
+  "command": {
+    "find": "orders",
+    "filter": {
+      "amount": {
+        "$gt": -1
+      }
+    },
+    "sort": {
+      "createdAt": 1
+    },
+    "limit": 200,
+    "lsid": {
+      "id": "bea8573b-9208-47b4-915c-8fae66f1d17b"
+    },
+    "$db": "mongo_practice"
+  },
+  "keysExamined": 7,
+  "docsExamined": 7,
+  "hasSortStage": true,
+  "fromMultiPlanner": true,
+  "nBatches": 1,
+  "cursorExhausted": true,
+  "numYield": 0,
+  "nreturned": 7,
+  "queryHash": "958B40C4",
+  "planCacheKey": "42F0FCFF",
+  "queryFramework": "classic",
+  "locks": {
+    "FeatureCompatibilityVersion": {
+      "acquireCount": {
+        "r": 1
+      }
+    },
+    "Global": {
+      "acquireCount": {
+        "r": 1
+      }
+    }
+  },
+  "flowControl": {},
+  "responseLength": 682,
+  "protocol": "op_msg",
+  "millis": 1,
+  "planSummary": "IXSCAN { amount: 1, status: 1 }",
+  "planningTimeMicros": 1138,
+  "execStats": {
+    "stage": "SORT",
+    "nReturned": 7,
+    "executionTimeMillisEstimate": 0,
+    "works": 17,
+    "advanced": 7,
+    "needTime": 8,
+    "needYield": 0,
+    "saveState": 0,
+    "restoreState": 0,
+    "isEOF": 1,
+    "sortPattern": {
+      "createdAt": 1
+    },
+    "memLimit": 104857600,
+    "limitAmount": 200,
+    "type": "simple",
+    "totalDataSizeSorted": 775,
+    "usedDisk": false,
+    "spills": 0,
+    "spilledDataStorageSize": 0,
+    "inputStage": {
+      "stage": "FETCH",
+      "nReturned": 7,
+      "executionTimeMillisEstimate": 0,
+      "works": 8,
+      "advanced": 7,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "docsExamined": 7,
+      "alreadyHasObj": 0,
+      "inputStage": {
+        "stage": "IXSCAN",
+        "nReturned": 7,
+        "executionTimeMillisEstimate": 0,
+        "works": 8,
+        "advanced": 7,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "keyPattern": {
+          "amount": 1,
+          "status": 1
+        },
+        "indexName": "amount_1_status_1",
+        "isMultiKey": false,
+        "multiKeyPaths": {
+          "amount": [],
+          "status": []
+        },
+        "isUnique": false,
+        "isSparse": false,
+        "isPartial": false,
+        "indexVersion": 2,
+        "direction": "forward",
+        "indexBounds": {
+          "amount": [
+            "(-1, inf.0]"
+          ],
+          "status": [
+            "[MinKey, MaxKey]"
+          ]
+        },
+        "keysExamined": 7,
+        "seeks": 1,
+        "dupsTested": 0,
+        "dupsDropped": 0
+      }
+    }
+  },
+  "ts": "2025-11-03T19:02:31.202Z",
+  "client": "127.0.0.1",
+  "appName": "MongoDB Compass",
+  "allUsers": [],
+  "user": ""
+}

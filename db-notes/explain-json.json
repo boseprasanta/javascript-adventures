@@ -1,0 +1,162 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "mongo_practice.orders",
+    "indexFilterSet": false,
+    "parsedQuery": { "amount": { "$gt": 100 } },
+    "queryHash": "6863359C",
+    "planCacheKey": "8312BD5C",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "winningPlan": {
+      "stage": "SORT",
+      "sortPattern": { "userId": 1 },
+      "memLimit": 104857600,
+      "type": "default",
+      "inputStage": {
+        "stage": "PROJECTION_COVERED",
+        "transformBy": {
+          "userId": 1,
+          "amount": 1,
+          "_id": 0
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "keyPattern": {
+            "amount": 1,
+            "userId": 1
+          },
+          "indexName": "amount_1_userId_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "amount": [],
+            "userId": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "amount": ["(100, inf.0]"],
+            "userId": ["[MinKey, MaxKey]"]
+          }
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 6,
+    "executionTimeMillis": 1,
+    "totalKeysExamined": 6,
+    "totalDocsExamined": 0,
+    "executionStages": {
+      "stage": "SORT",
+      "nReturned": 6,
+      "executionTimeMillisEstimate": 0,
+      "works": 14,
+      "advanced": 6,
+      "needTime": 7,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "sortPattern": { "userId": 1 },
+      "memLimit": 104857600,
+      "type": "default",
+      "totalDataSizeSorted": 942,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "inputStage": {
+        "stage": "PROJECTION_COVERED",
+        "nReturned": 6,
+        "executionTimeMillisEstimate": 0,
+        "works": 7,
+        "advanced": 6,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "transformBy": {
+          "userId": 1,
+          "amount": 1,
+          "_id": 0
+        },
+        "inputStage": {
+          "stage": "IXSCAN",
+          "nReturned": 6,
+          "executionTimeMillisEstimate": 0,
+          "works": 7,
+          "advanced": 6,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "keyPattern": {
+            "amount": 1,
+            "userId": 1
+          },
+          "indexName": "amount_1_userId_1",
+          "isMultiKey": false,
+          "multiKeyPaths": {
+            "amount": [],
+            "userId": []
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "amount": ["(100, inf.0]"],
+            "userId": ["[MinKey, MaxKey]"]
+          },
+          "keysExamined": 6,
+          "seeks": 1,
+          "dupsTested": 0,
+          "dupsDropped": 0
+        }
+      }
+    }
+  },
+  "command": {
+    "find": "orders",
+    "filter": { "amount": { "$gt": 100 } },
+    "sort": { "userId": 1 },
+    "projection": {
+      "userId": 1,
+      "amount": 1,
+      "_id": 0
+    },
+    "hint": { "amount": 1, "userId": 1 },
+    "skip": 0,
+    "limit": 0,
+    "maxTimeMS": 60000,
+    "$db": "mongo_practice"
+  },
+  "serverInfo": {
+    "host": "192.168.16.6",
+    "port": 27017,
+    "version": "7.0.24",
+    "gitVersion": "332b0e6c30fdc41a0228dc55657e2e0784b0fe24"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFrameworkControl": "forceClassicEngine"
+  },
+  "ok": 1
+}
